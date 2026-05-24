@@ -465,7 +465,7 @@ body {
     </div>
 
     <div class="field-group">
-      <label class="field-label">Tipo de evento <span class="field-required">*</span></label>
+      <label class="field-label">Tipo de evento </label>
       <div class="option-cards" id="event-type-cards">
         <div class="option-card" onclick="selectCard('event-type','casamento','Casamento',this)">
           <span class="option-card-label">Casamento</span>
@@ -481,13 +481,11 @@ body {
           <span class="option-card-label">Aniversário / Outro</span>
         </div>
       </div>
-      <div class="field-error" id="err-event-type">Por favor selecione o tipo de evento.</div>
     </div>
 
     <div class="field-group">
-      <label class="field-label">Data pretendida <span class="field-required">*</span></label>
+      <label class="field-label">Data pretendida </label>
       <input type="date" class="field-input" id="event-date" min="2025-01-01">
-      <div class="field-error" id="err-event-date">Por favor indique uma data.</div>
     </div>
 
     <div class="field-group">
@@ -546,7 +544,7 @@ body {
     </div>
 
     <div class="field-group">
-      <label class="field-label">Número de convidados adultos <span class="field-required">*</span></label>
+      <label class="field-label">Número de convidados adultos </label>
       <div class="range-wrap">
         <input type="range" class="range-input" id="guests-adults" min="10" max="300" value="50" step="5" oninput="updateRange('guests-adults','guests-adults-val','','convidados adultos')">
         <div class="range-value"><span id="guests-adults-val">50</span> <span>convidados adultos</span></div>
@@ -708,21 +706,18 @@ body {
     </div>
 
     <div class="field-group">
-      <label class="field-label">Nome completo <span class="field-required">*</span></label>
+      <label class="field-label">Nome completo </label>
       <input type="text" class="field-input" id="contact-name" placeholder="ex: Ana Silva">
-      <div class="field-error" id="err-name">Por favor indique o seu nome.</div>
     </div>
 
     <div class="field-group">
-      <label class="field-label">Telefone / WhatsApp <span class="field-required">*</span></label>
+      <label class="field-label">Telefone / WhatsApp </label>
       <input type="tel" class="field-input" id="contact-phone" placeholder="+351 9XX XXX XXX">
-      <div class="field-error" id="err-phone">Por favor indique um número de telefone.</div>
     </div>
 
     <div class="field-group">
-      <label class="field-label">Email <span class="field-required">*</span></label>
+      <label class="field-label">Email </label>
       <input type="email" class="field-input" id="contact-email" placeholder="exemplo@email.com">
-      <div class="field-error" id="err-email">Por favor indique um email válido.</div>
     </div>
 
     <div class="field-group">
@@ -812,24 +807,7 @@ function goToStep(n) {
 
 // ── VALIDATION ──
 function validateStep(step) {
-  let valid = true;
-  if (step === 1) {
-    if (!data.eventType) {
-      show('err-event-type'); valid = false;
-    } else hide('err-event-type');
-    if (!document.getElementById('event-date').value) {
-      show('err-event-date'); valid = false;
-    } else hide('err-event-date');
-  }
-  if (step === 4) {
-    const name = document.getElementById('contact-name').value.trim();
-    const phone = document.getElementById('contact-phone').value.trim();
-    const email = document.getElementById('contact-email').value.trim();
-    if (!name) { show('err-name'); valid = false; } else hide('err-name');
-    if (!phone) { show('err-phone'); valid = false; } else hide('err-phone');
-    if (!email || !email.includes('@')) { show('err-email'); valid = false; } else hide('err-email');
-  }
-  return valid;
+  return true;
 }
 
 function show(id) {
