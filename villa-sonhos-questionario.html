@@ -550,7 +550,7 @@ body {
     <div class="field-group">
       <label class="field-label">Número de convidados adultos </label>
       <div class="range-wrap">
-        <input type="range" class="range-input" id="guests-adults" min="10" max="300" value="50" step="5" oninput="updateRange('guests-adults','guests-adults-val','','convidados adultos')">
+        <input type="range" class="range-input" id="guests-adults" min="10" max="150" value="50" step="5" oninput="updateRange('guests-adults','guests-adults-val','','convidados adultos')">
         <div class="range-value"><span id="guests-adults-val">50</span> <span>convidados adultos</span></div>
       </div>
     </div>
@@ -815,7 +815,6 @@ function collectStep(step) {
   if (step === 2) {
     data.guestsAdults = document.getElementById('guests-adults').value;
     data.guestsKids = document.getElementById('guests-kids').value;
-    data.dietaryNotes = document.getElementById('dietary-notes').value;
   }
   if (step === 3) {
     data.howFound = document.getElementById('how-found').value;
