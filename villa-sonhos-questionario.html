@@ -21,13 +21,28 @@
   --border: #DDD0B0;
   --white: #FFFFFF;
   --green: #2D7A4F;
+  /* modern system tokens */
+  --grad-gold: linear-gradient(135deg, #D4B65C 0%, #B8952A 55%, #92731D 100%);
+  --grad-soft: linear-gradient(160deg, #FFFFFF 0%, #FDFAF3 100%);
+  --line: rgba(184,149,42,.18);
+  --line-soft: rgba(184,149,42,.10);
+  --radius: 18px;
+  --radius-sm: 13px;
+  --shadow-sm: 0 2px 10px rgba(30,24,16,.04);
+  --shadow-md: 0 14px 36px -12px rgba(30,24,16,.14);
+  --shadow-gold: 0 14px 34px -10px rgba(184,149,42,.40);
 }
 html { scroll-behavior: smooth; }
 body {
   font-family: 'Jost', sans-serif;
-  background: var(--cl);
+  background:
+    radial-gradient(1100px 520px at 50% -8%, rgba(201,168,76,.10), transparent 60%),
+    radial-gradient(900px 600px at 100% 100%, rgba(201,168,76,.06), transparent 55%),
+    linear-gradient(180deg, #FDFAF3 0%, #F8F2E6 100%);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── HERO ── */
@@ -78,56 +93,74 @@ body {
 
 /* ── PROGRESS BAR ── */
 .progress-wrap {
-  background: white;
-  border-bottom: 1px solid var(--border);
+  background: rgba(253,250,243,.78);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--line);
   padding: 0;
   position: sticky; top: 0; z-index: 50;
 }
 .progress-steps {
   display: flex;
   max-width: 600px; margin: 0 auto;
+  padding: 14px 12px 12px;
 }
 .progress-step {
-  flex: 1; padding: 14px 8px;
+  flex: 1; padding: 4px;
   text-align: center; cursor: pointer;
-  border-bottom: 2px solid transparent;
   transition: all .25s;
   position: relative;
 }
-.progress-step.active {
-  border-bottom-color: var(--gold);
+/* connecting line behind the dots */
+.progress-step::before {
+  content: '';
+  position: absolute; top: 15px; left: -50%; width: 100%;
+  height: 2px; background: var(--line); z-index: 0;
 }
-.progress-step.done {
-  border-bottom-color: var(--gp);
-}
+.progress-step:first-child::before { display: none; }
+.progress-step.done::before, .progress-step.active::before { background: var(--gl); }
 .progress-step-num {
-  width: 22px; height: 22px;
+  position: relative; z-index: 1;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
+  background: var(--white);
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--tl);
-  margin: 0 auto 4px;
-  transition: all .25s;
+  font-size: 11px; color: var(--tl);
+  margin: 0 auto 7px;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
 }
 .progress-step.active .progress-step-num {
-  background: var(--gold); border-color: var(--gold); color: white;
+  background: var(--grad-gold); border-color: transparent; color: white;
+  box-shadow: var(--shadow-gold);
+  transform: scale(1.12);
 }
 .progress-step.done .progress-step-num {
-  background: var(--gp); border-color: var(--gold); color: var(--gt);
+  background: var(--grad-gold); border-color: transparent; color: white;
 }
 .progress-step-label {
-  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--tl);
+  transition: color .25s;
 }
-.progress-step.active .progress-step-label {
-  color: var(--gold);
-}
+.progress-step.active .progress-step-label { color: var(--gt); font-weight: 600; }
+.progress-step.done .progress-step-label { color: var(--gold); }
 
 /* ── FORM WRAPPER ── */
 .form-wrap {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
+  max-width: 620px;
+  margin: 28px auto 64px;
+  padding: 40px 36px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 26px;
+  box-shadow: 0 30px 70px -28px rgba(30,24,16,.28);
+  position: relative; z-index: 10;
+}
+@media (max-width: 560px) {
+  .form-wrap { margin: 16px 12px 40px; padding: 28px 20px; border-radius: 20px; }
 }
 
 /* ── STEP PANEL ── */
@@ -169,18 +202,19 @@ body {
 .field-input,
 .field-select,
 .field-textarea {
-  width: 100%; padding: 14px 16px;
-  background: white; border: 1px solid var(--border);
-  border-radius: 2px; font-family: 'Jost', sans-serif;
+  width: 100%; padding: 15px 18px;
+  background: var(--grad-soft); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); font-family: 'Jost', sans-serif;
   font-size: 15px; color: var(--text); outline: none;
-  transition: border-color .2s, box-shadow .2s;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .25s, box-shadow .25s, transform .25s;
   -webkit-appearance: none;
 }
 .field-input:focus,
 .field-select:focus,
 .field-textarea:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(184,149,42,.1);
+  box-shadow: 0 0 0 4px rgba(184,149,42,.12), var(--shadow-md);
 }
 .field-input::placeholder,
 .field-textarea::placeholder { color: var(--tl); }
@@ -195,26 +229,37 @@ body {
   gap: 10px;
 }
 .option-card {
-  border: 1.5px solid var(--border);
-  padding: 16px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 16px;
   cursor: pointer;
-  transition: all .2s;
-  background: white;
+  transition: all .28s cubic-bezier(.34,1.2,.64,1);
+  background: var(--grad-soft);
+  box-shadow: var(--shadow-sm);
   position: relative;
-  min-height: 56px;
+  min-height: 64px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.option-card:hover { border-color: var(--gold); }
+.option-card:hover {
+  border-color: rgba(184,149,42,.45);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
 .option-card.selected {
-  border-color: var(--gold);
-  background: #FFFDF5;
+  border-color: transparent;
+  background: linear-gradient(160deg, #FFFDF6 0%, #FBF3DC 100%);
+  box-shadow: 0 0 0 1.5px var(--gold), var(--shadow-gold);
 }
 .option-card.selected::after {
   content: '✓';
-  position: absolute; top: 8px; right: 10px;
-  font-size: 11px; color: var(--gold); font-weight: 600;
+  position: absolute; top: 10px; right: 12px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--grad-gold); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  box-shadow: var(--shadow-gold);
 }
 .option-card-icon {
   font-size: 20px; margin-bottom: 8px;
@@ -239,24 +284,27 @@ body {
 }
 .extra-check-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 14px 16px;
-  background: white; border: 1px solid var(--border);
-  cursor: pointer; transition: all .2s;
+  padding: 15px 18px;
+  background: var(--grad-soft); border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer; transition: all .25s cubic-bezier(.34,1.2,.64,1);
   user-select: none;
 }
-.extra-check-item:hover { border-color: var(--gold); }
+.extra-check-item:hover { border-color: rgba(184,149,42,.45); transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .extra-check-item.checked {
-  border-color: var(--gold); background: #FFFDF5;
+  border-color: transparent; background: linear-gradient(160deg, #FFFDF6 0%, #FBF3DC 100%);
+  box-shadow: 0 0 0 1.5px var(--gold), var(--shadow-gold);
 }
 .extra-checkbox {
-  width: 20px; height: 20px;
+  width: 22px; height: 22px;
   border: 1.5px solid var(--border);
-  border-radius: 2px; flex-shrink: 0;
+  border-radius: 7px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: all .2s;
+  transition: all .25s;
 }
 .extra-check-item.checked .extra-checkbox {
-  background: var(--gold); border-color: var(--gold);
+  background: var(--grad-gold); border-color: transparent;
 }
 .extra-check-item.checked .extra-checkbox::after {
   content: ''; width: 5px; height: 9px;
@@ -268,23 +316,38 @@ body {
 .extra-check-price { font-size: 12px; color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 16px; }
 
 /* ── RANGE SLIDER ── */
-.range-wrap { position: relative; padding-bottom: 8px; }
+.range-wrap {
+  position: relative;
+  padding: 22px 20px 14px;
+  background: var(--grad-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
 .range-input {
-  width: 100%; -webkit-appearance: none;
-  height: 3px; background: var(--gp);
-  border-radius: 2px; outline: none; cursor: pointer;
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 6px;
+  background: linear-gradient(90deg, var(--gl), var(--gold));
+  border-radius: 100px; outline: none; cursor: pointer;
 }
 .range-input::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 22px; height: 22px;
-  border-radius: 50%; background: var(--gold);
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(184,149,42,.4);
-  cursor: pointer;
+  -webkit-appearance: none; width: 26px; height: 26px;
+  border-radius: 50%; background: var(--grad-gold);
+  border: 3px solid white;
+  box-shadow: var(--shadow-gold);
+  cursor: pointer; transition: transform .15s;
 }
+.range-input::-webkit-slider-thumb:hover { transform: scale(1.12); }
+.range-input::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #B8952A; border: 3px solid white;
+  box-shadow: var(--shadow-gold); cursor: pointer;
+}
+.range-input::-moz-range-track { height: 6px; border-radius: 100px; background: var(--gp); }
 .range-value {
-  text-align: center; margin-top: 12px;
+  text-align: center; margin-top: 16px;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 28px; color: var(--gold); font-weight: 300;
+  font-size: 34px; color: var(--gold); font-weight: 300; line-height: 1;
 }
 .range-value span { font-size: 13px; font-family: 'Jost', sans-serif; color: var(--tl); }
 
@@ -292,20 +355,22 @@ body {
 .radio-group { display: flex; flex-direction: column; gap: 8px; }
 .radio-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 13px 16px; background: white;
-  border: 1px solid var(--border); cursor: pointer;
-  transition: all .2s; user-select: none;
+  padding: 15px 18px; background: var(--grad-soft);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.34,1.2,.64,1); user-select: none;
 }
-.radio-item:hover { border-color: var(--gold); }
-.radio-item.selected { border-color: var(--gold); background: #FFFDF5; }
+.radio-item:hover { border-color: rgba(184,149,42,.45); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.radio-item.selected { border-color: transparent; background: linear-gradient(160deg, #FFFDF6 0%, #FBF3DC 100%); box-shadow: 0 0 0 1.5px var(--gold), var(--shadow-gold); }
 .radio-circle {
-  width: 18px; height: 18px; border-radius: 50%;
+  width: 20px; height: 20px; border-radius: 50%;
   border: 1.5px solid var(--border); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: all .2s;
+  transition: all .25s;
 }
 .radio-item.selected .radio-circle {
-  border-color: var(--gold); background: var(--gold);
+  border-color: transparent; background: var(--grad-gold);
 }
 .radio-item.selected .radio-circle::after {
   content: ''; width: 6px; height: 6px;
@@ -318,31 +383,36 @@ body {
   display: flex; gap: 12px; margin-top: 32px;
 }
 .btn-next {
-  flex: 1; padding: 16px;
-  background: var(--gold); color: white; border: none;
+  flex: 1; padding: 17px;
+  background: var(--grad-gold); color: white; border: none;
+  border-radius: 100px;
   font-family: 'Jost', sans-serif; font-size: 10px;
   font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
-  cursor: pointer; transition: background .2s;
+  cursor: pointer; transition: transform .2s, box-shadow .2s, filter .2s;
+  box-shadow: var(--shadow-gold);
 }
-.btn-next:hover { background: var(--gt); }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -10px rgba(184,149,42,.55); filter: brightness(1.04); }
+.btn-next:active { transform: translateY(0); }
 .btn-back {
-  padding: 16px 20px;
-  background: transparent; color: var(--tl);
-  border: 1px solid var(--border);
+  padding: 17px 24px;
+  background: rgba(255,255,255,.6); color: var(--tl);
+  border: 1px solid var(--line); border-radius: 100px;
   font-family: 'Jost', sans-serif; font-size: 10px;
-  font-weight: 400; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
   cursor: pointer; transition: all .2s;
 }
-.btn-back:hover { border-color: var(--gold); color: var(--gold); }
+.btn-back:hover { border-color: var(--gold); color: var(--gold); background: #fff; }
 
 /* ── RESUMO ── */
 .summary-card {
-  background: white; border: 1px solid var(--border);
-  padding: 24px;
+  background: var(--grad-soft); border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 10px 26px; overflow: hidden;
 }
 .summary-row {
   display: flex; justify-content: space-between; align-items: flex-start;
-  padding: 11px 0; border-bottom: 1px solid var(--cd);
+  padding: 14px 0; border-bottom: 1px solid var(--line-soft);
   font-size: 13px; color: var(--tm);
 }
 .summary-row:last-child { border-bottom: none; }
@@ -538,29 +608,8 @@ body {
     </div>
 
     <div class="field-group">
-      <label class="field-label">Horário preferido</label>
-      <div class="radio-group">
-        <div class="radio-item" onclick="selectRadio('event-time','manha','Manhã',this)">
-          <div class="radio-circle"></div>
-          <div class="radio-label">Manhã</div>
-        </div>
-        <div class="radio-item" onclick="selectRadio('event-time','tarde','Tarde (14h–18h)',this)">
-          <div class="radio-circle"></div>
-          <div class="radio-label">Tarde · 14h às 18h</div>
-        </div>
-        <div class="radio-item" onclick="selectRadio('event-time','noite','Noite (18h–00h)',this)">
-          <div class="radio-circle"></div>
-          <div class="radio-label">Noite · 18h às 00h</div>
-        </div>
-        <div class="radio-item" onclick="selectRadio('event-time','dia-todo','Dia todo',this)">
-          <div class="radio-circle"></div>
-          <div class="radio-label">Dia todo</div>
-        </div>
-        <div class="radio-item" onclick="selectRadio('event-time','indefinido','Ainda indefinido',this)">
-          <div class="radio-circle"></div>
-          <div class="radio-label">Ainda indefinido</div>
-        </div>
-      </div>
+      <label class="field-label">Horário aproximado de início</label>
+      <input type="text" class="field-input" id="event-time" placeholder="ex: por volta das 16h">
     </div>
 
     <div class="field-group">
@@ -574,6 +623,21 @@ body {
         </div>
         <div class="radio-item" onclick="selectRadio('ceremony','a-decidir','A decidir',this)">
           <div class="radio-circle"></div><div class="radio-label">Ainda a decidir</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Está a contactar vários espaços?</label>
+      <div class="radio-group">
+        <div class="radio-item" onclick="selectRadio('multipleVenues','sim','Sim',this)">
+          <div class="radio-circle"></div><div class="radio-label">Sim</div>
+        </div>
+        <div class="radio-item" onclick="selectRadio('multipleVenues','nao','Não',this)">
+          <div class="radio-circle"></div><div class="radio-label">Não</div>
+        </div>
+        <div class="radio-item" onclick="selectRadio('multipleVenues','primeira-opcao','A Villa Sonhos é a minha primeira opção',this)">
+          <div class="radio-circle"></div><div class="radio-label">A Villa Sonhos é a minha primeira opção</div>
         </div>
       </div>
     </div>
@@ -595,7 +659,7 @@ body {
       <label class="field-label">Número de convidados adultos </label>
       <div class="range-wrap">
         <p style="font-size:11px;color:var(--tl);margin-bottom:10px;line-height:1.5">Valores aproximados são suficientes nesta fase. Pode ajustar mais tarde.</p>
-      <input type="range" class="range-input" id="guests-adults" min="10" max="180" value="50" step="5" oninput="updateRange('guests-adults','guests-adults-val','','convidados adultos')">
+      <input type="range" class="range-input" id="guests-adults" min="10" max="150" value="50" step="5" oninput="updateRange('guests-adults','guests-adults-val','','convidados adultos')">
         <div class="range-value"><span id="guests-adults-val">50</span> <span>convidados adultos</span></div>
       </div>
     </div>
@@ -603,7 +667,7 @@ body {
     <div class="field-group">
       <label class="field-label">Número de crianças (0–12 anos)</label>
       <div class="range-wrap">
-        <input type="range" class="range-input" id="guests-kids" min="0" max="50" value="0" step="1" oninput="updateRange('guests-kids','guests-kids-val','','crianças')">
+        <input type="range" class="range-input" id="guests-kids" min="0" max="30" value="0" step="1" oninput="updateRange('guests-kids','guests-kids-val','','crianças')">
         <div class="range-value"><span id="guests-kids-val">0</span> <span>crianças</span></div>
       </div>
     </div>
@@ -625,19 +689,11 @@ body {
     </div>
 
     <div class="field-group">
-      <label class="field-label">Pacote de interesse</label>
-      <div class="option-cards">
-        <div class="option-card" onclick="selectCard('package','pacote1','Pacote 1 · 90€/pax',this)">
-          <span class="option-card-label">Pacote 1</span>
-          <span class="option-card-sub">90€/pax · até 5 horas</span>
-        </div>
-        <div class="option-card" onclick="selectCard('package','pacote2','Pacote 2 · 105€/pax',this)">
-          <span class="option-card-label">Pacote 2</span>
-          <span class="option-card-sub">105€/pax · até 6 horas</span>
-        </div>
-        <div class="option-card" style="grid-column:1/-1" onclick="selectCard('package','nao-sei','Ainda não sei',this)">
-          <span class="option-card-label">Ainda não sei · Quero aconselhamento</span>
-        </div>
+      <label class="field-label">Qual o investimento aproximado previsto por pessoa?</label>
+      <div class="range-wrap">
+        <p style="font-size:11px;color:var(--tl);margin-bottom:10px;line-height:1.5">A ideia não é limitar — ajuda-nos apenas a enquadrar melhor o vosso evento logo no primeiro contacto.</p>
+        <input type="range" class="range-input" id="budget-pp" min="50" max="250" value="120" step="5" oninput="updateRange('budget-pp','budget-pp-val','','€ / pessoa')">
+        <div class="range-value"><span id="budget-pp-val">120</span> <span>€ / pessoa</span></div>
       </div>
     </div>
 
@@ -702,20 +758,6 @@ body {
           <div class="extra-check-label">Registo de Vídeo/Foto</div>
         </div>
       </div>
-    <div class="field-group" style="margin-top:32px">
-      <label class="field-label">Como nos conheceu?</label>
-      <select class="field-select" id="how-found">
-        <option value="">Selecione...</option>
-        <option>Google</option>
-        <option>Instagram</option>
-        <option>Facebook</option>
-        <option>Recomendação de amigo/familiar</option>
-        <option>TikTok</option>
-        <option>Passagem pelo local</option>
-        <option>Outro</option>
-      </select>
-    </div>
-
     <div class="step-nav">
       <button class="btn-back" onclick="prevStep(3)">← Voltar</button>
       <button class="btn-next" onclick="nextStep(3)">Continuar →</button>
@@ -808,7 +850,7 @@ body {
 
     <div class="summary-card" id="summary-content"></div>
 
-    <div style="margin-top:20px;padding:16px;background:var(--cd);font-size:12px;color:var(--tl);line-height:1.7;border-left:3px solid var(--gold)">
+    <div style="margin-top:20px;padding:18px;background:rgba(237,229,212,.55);border-radius:13px;font-size:12px;color:var(--tl);line-height:1.7;border-left:3px solid var(--gold)">
       Ao submeter, os seus dados serão tratados exclusivamente para resposta a este pedido. Não partilhamos informação com terceiros.
     </div>
 
@@ -817,7 +859,7 @@ body {
       <button class="btn-next" id="submit-btn" onclick="submitForm()">Enviar Pedido ✓</button>
     </div>
 
-    <div id="submit-error" style="display:none;margin-top:12px;padding:14px;background:#FFF0F0;border:1px solid #E0AAAA;font-size:13px;color:#8B2020;text-align:center">
+    <div id="submit-error" style="display:none;margin-top:12px;padding:14px;background:#FFF0F0;border:1px solid #E0AAAA;border-radius:13px;font-size:13px;color:#8B2020;text-align:center">
       Erro ao enviar. Por favor tente novamente ou contacte-nos diretamente.
     </div>
   </div>
@@ -840,11 +882,11 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_URL_AQUI/exec';
 // ── STATE ──
 const data = {
   eventType: '', eventDate: '', eventDateAlt: '',
-  eventTime: '', ceremony: '',
+  eventTime: '', ceremony: '', multipleVenues: '',
   guestsAdults: 50, guestsKids: 0,
   dietary: '', dietaryNotes: '',
-  package: '', extras: [],
-  budget: '', howFound: '',
+  extras: [],
+  budget: '',
   name: '', phone: '', email: '', message: '', contactPref: '', visitAvail: '', inspiration: ''
 };
 
@@ -898,13 +940,14 @@ function collectStep(step) {
   if (step === 1) {
     data.eventDate = document.getElementById('event-date').value;
     data.eventDateAlt = document.getElementById('event-date-alt').value;
+    data.eventTime = document.getElementById('event-time').value.trim();
   }
   if (step === 2) {
     data.guestsAdults = document.getElementById('guests-adults').value;
     data.guestsKids = document.getElementById('guests-kids').value;
   }
   if (step === 3) {
-    data.howFound = document.getElementById('how-found').value;
+    data.budget = document.getElementById('budget-pp').value + '€ / pessoa';
   }
   if (step === 4) {
     data.name = document.getElementById('contact-name').value.trim();
@@ -957,15 +1000,14 @@ function buildSummary() {
     ['Tipo de Evento', data.eventType],
     ['Data', formatDate(data.eventDate)],
     ['Data Alternativa', data.eventDateAlt ? formatDate(data.eventDateAlt) : '—'],
-    ['Horário', data.eventTime || '—'],
+    ['Horário de início', data.eventTime || '—'],
     ['Cerimónia no espaço', data.ceremony || '—'],
+    ['A contactar vários espaços', data.multipleVenues || '—'],
     ['Adultos', data.guestsAdults + ' pessoas'],
     ['Crianças', data.guestsKids + ' crianças'],
     ['Necessidades alimentares', data.dietary || '—'],
-    ['Pacote', data.package || '—'],
     ['Extras', data.extras.length ? data.extras.join(', ') : 'Nenhum'],
-    ['Orçamento', data.budget || '—'],
-    ['Como nos conheceu', data.howFound || '—'],
+    ['Investimento por pessoa', data.budget || '—'],
     ['Mensagem', data.message || '—'],
   ];
   document.getElementById('summary-content').innerHTML = rows.map(([k,v]) =>
@@ -1013,13 +1055,13 @@ function buildEmailHtml() {
     ['Tipo de Evento', data.eventType],
     ['Data Pretendida', formatDate(data.eventDate)],
     ['Data Alternativa', data.eventDateAlt ? formatDate(data.eventDateAlt) : '—'],
-    ['Horário', data.eventTime || '—'],
+    ['Horário de Início', data.eventTime || '—'],
     ['Cerimónia no espaço', data.ceremony || '—'],
+    ['A Contactar Vários Espaços', data.multipleVenues || '—'],
     ['Convidados Adultos', data.guestsAdults],
     ['Crianças', data.guestsKids],
-    ['Pacote de Interesse', data.package || '—'],
     ['Extras Selecionados', data.extras.length ? data.extras.join(', ') : 'Nenhum'],
-    ['Como nos Conheceu', data.howFound || '—'],
+    ['Investimento por Pessoa', data.budget || '—'],
     ['Contacto Preferido', data.contactPref || '—'],
     ['Disponibilidade Visita', data.visitAvail || '—'],
     ['Referência / Tema', data.inspiration || '—'],
